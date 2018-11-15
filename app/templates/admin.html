@@ -1,0 +1,51 @@
+{% extends 'admin/master.html' %}
+
+
+{% block body %}
+    {{ super() }}
+    {% if current_user.is_authenticated %}
+        <h2 class="text-center">欢迎来到后台管理！</h2>
+        <br>
+        <ul class="list-inline">
+            <li><a href="/">主页</a></li>
+            <li>
+                <a href="{{ url_for('main.post_article') }}">发表文章</a>
+            </li>
+            <li>
+                <a href="{{ url_for('main.logout') }}">退出登录</a>
+            </li>
+        </ul>
+    {% endif %}
+
+    <footer class="post-footer clearfix">
+        <hr>
+    </footer>
+
+    <div class="widget text-center">
+        <h4 class="title">关于作者</h4>
+        <div class="content community">
+            <img src="http://www.gravatar.com/avatar/0d1932c76af01d395aa1da8e9b9d6f33?s=150&d=mp&r=g"
+                 width="150" height="150" class="img-circle center-block">
+            <p><strong>Clarence</strong></p>
+            <ul class="list-inline">
+                <li>
+                    <a class="navbar-brand" href="http://www.weibo.com/" target="_blank">
+                        <img alt="Weibo" src="/static/image/weibo.png" width="25" height="25">
+                    </a>
+                </li>
+                <li>
+                    <a class="navbar-brand" href="https://github.com/clarencejh" target="_blank">
+                        <img alt="GitHub" src="/static/image/github.png" width="25" height="25">
+                    </a>
+                </li>
+                <li>
+                    <a class="navbar-brand" href="mailto:clarencepy@163.com" target="_blank">
+                        <img alt="Weibo" src="/static/image/email.png" width="25" height="25">
+                    </a>
+                </li>
+            </ul>
+            <hr>
+            <p>Just Do It.</p>
+        </div>
+    </div>
+{% endblock body %}

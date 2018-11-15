@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+
+{% block styles %}
+    #submit {
+    margin: auto 50px;
+    width:40%;
+    }
+    .form-control{
+    width: 90%;
+    margin: auto;
+    }
+{% endblock %}
+
+{% block post_edit %}
+    <link rel="stylesheet" href="{{ url_for('static',filename='editormd/css/editormd.css') }}"/>
+    <div class="row">
+        <h1 class="text-center">Edit Post</h1>
+
+        <form method="post" action="{{ url_for('.edit_article', id=post.id) }}">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.title.label }}
+                {% if form.title.errors %}
+                    {% for e in form.title.errors %}
+                        <p class="help-block">{{ e }}</p>
+                    {% endfor %}
+                {% endif %}
+                {{ form.title(class_='form-control') }}
+            </div>
+            <div class="form-group">
+                {{ form.category.label }}
+                {{ form.category(class_='form-control') }}
+            </div>
+            <div class="form-group">
+                {{ form.body.label }}
+                <div id="editormd" class="form-control">
+                    {{ form.body(style="display:none;") }}
+                </div>
+            </div>
+            <div class="form-group">
+                {{ form.link.label }}
+                {{ form.link(class_='form-control') }}
+            </div>
+            <div class="form-group">
+                <input class="btn btn-default" type="submit" id="submit" value="提交">
+            </div>
+        </form>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script src="https://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
+    <script src="{{ url_for('static',filename='editormd/editormd.min.js') }}"></script>
+    <script type="text/javascript">
+        var testEditor;
+        $(function () {
+            testEditor = editormd("editormd", {
+                width: "90%",
+                height: 600,
+                syncScrolling: "single",
+                path: "{{ url_for('static',filename='editormd/lib/') }}"
+            });
+        });
+    </script>
+{% endblock %}

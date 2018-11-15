@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% import '_macros.html' as macros %}
+
+{% block main %}
+
+    <div class="post">
+
+        <div class="page-header">
+            <h3 class="text-center">在这里, 你可以畅所欲言</h3>
+        </div>
+        <form method="post"  action="{{ url_for('msg.index') }}" >
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.body.label }}
+                {{ form.body(class_='form-control') }}
+            </div>
+            <div class="form-group">
+                <span>
+                {{ form.name.label }}
+                {{ form.name(class='form-control') }}
+                </span>
+            </div>
+            <input class="btn btn-default btn-block" type="submit" value="提交">
+        </form>
+
+        <footer class="post-footer clearfix"></footer>
+        <ul class="list-group">
+            {% for msg in msgs %}
+                <li class="list-group-item">
+                    <span >#{{ msg.id }}</span>   <span style="color: #00aaaa; margin-left: 10px">{{ msg.name }}</span><span class="pull-right">{{ moment(msg.timestamp).format("lll") }}</span>
+                    <p></p>
+                    <strong style="margin-left: 35px">{{ msg.body }}</strong>
+                </li>
+            {% endfor %}
+        </ul>
+        <footer class="post-footer clearfix"></footer>
+
+    </div>
+    <nav class="pagination" role="navigation">
+        {{ macros.pagination_widget(pagination, 'msg.index') }}
+    </nav>
+
+{% endblock %}

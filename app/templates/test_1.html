@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8"/>
+    <title>Simple example</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='editormd/css/editormd.css') }}"/>
+</head>
+<body>
+<div class="col-lg-12 post-text">
+     {{ mkd|markdown|safe }}
+</div>
+
+<div id="test-editormd">
+</div>
+<script src="https://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
+<script src="{{ url_for('static',filename='editormd/editormd.min.js') }}"></script>
+<script type="text/javascript">
+    var testEditor;
+
+    $(function () {
+        testEditor = editormd("test-editormd", {
+            width: "60%",
+            height: 400,
+            syncScrolling: "single",
+            path: "{{ url_for('static',filename='editormd/lib/') }}"
+        });
+    });
+</script>
+</body>
+</html>

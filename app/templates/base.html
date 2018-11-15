@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+<head>
+    <meta charset=utf-8>
+    <meta http-equiv=X-UA-Compatible content="IE=edge">
+    <title>Clarence 的博客</title>
+    <meta name=description content="python爱好的的博客">
+    <meta name=keywords content="">
+    <meta name=HandheldFriendly content=True>
+    <meta name=viewport content="width=device-width,initial-scale=1">
+    <link rel="shortcht icon" href="{{ url_for('static', filename="favicon.ico") }}">
+    <link rel="icon" href="{{ url_for("static", filename="favicon.ico") }}" type="image/x-icon">
+    <link rel=stylesheet href="https://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel=stylesheet href="https://cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel=stylesheet href="https://cdn.bootcss.com/highlight.js/9.0.0/styles/vs.min.css">
+    <link rel=stylesheet type=text/css href={{ url_for('static', filename="css/screen.min.css") }}>
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?c8d13872a523d9c286aa7affbe0921f1";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+
+    </script>
+    <style>
+        {% block styles %}{% endblock %}
+    </style>
+</head>
+<body class="home-template">
+<header class="main-header"
+        style="background-image: url({{ url_for('static', filename='image/backbround.jpg') }})">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12"><h1>Clarence 的博客</h1>
+            </div>
+            <div class="col-xs-12 hidden-xs hidden-sm">
+                <a href="#" class="btn btn-default btn-doc">
+                    赞一下
+                </a>
+                <a href="https://github.com/clarencejh/myblog" class="btn btn-default btn-doc" target="_blank">
+                    Github
+                </a>
+            </div>
+        </div>
+    </div>
+</header>
+<nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed" data-toggle=collapse
+                                                 data-target="#main-menu"><span class="sr-only">Toggle navigation</span> <i
+                    class="fa fa-bars"></i></span></div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation"><a href="/" title="首页">首页</a></li>
+                        <li role="presentation"><a href="{{ url_for('msg.index') }}" title="在这里, 你可以畅所欲言">留言板</a></li>
+                        <li role="presentation"><a href="https://imgchr.com/" title="图床连接" target="_blank">图床</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+<section class=content-wrap>
+    <div class=container>
+        {% block post_edit %}
+            <div class="container">
+                {#        消息闪现    #}
+                {% for message in get_flashed_messages() %}
+                    <div class="alert alert-warning text-center">
+                        <button class="close" type="button" data-dismiss="alert">&times;</button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+
+                {% block page_content %}{% endblock %}
+            </div>
+            <div class=row>
+                <!-- 左边部分 -->
+                <main class="col-md-8 main-content">
+                    {% block main %}
+                    {% endblock %}
+                </main>
+                <!-- 右边部分 -->
+                <aside class="col-md-4 sidebar">
+                    <div class=widget><h4 class=title>关于作者</h4>
+                        <div class="content community text-center">
+                            <img src="http://www.gravatar.com/avatar/0d1932c76af01d395aa1da8e9b9d6f33?s=150&d=mp&r=g"
+                                 width="150" height="150" class="img-circle center-block">
+                            <p><strong>Clarence</strong></p>
+                            <ul class="list-inline">
+                                <li>
+                                    <a class="navbar-brand" href="http://www.weibo.com/" target="_blank">
+                                        <img alt="Weibo" src="/static/image/weibo.png" width="25" height="25">
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="navbar-brand" href="https://github.com/clarencejh" target="_blank">
+                                        <img alt="GitHub" src="/static/image/github.png" width="25" height="25">
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="navbar-brand" href="mailto:clarencepy@163.com" target="_blank">
+                                        <img alt="Weibo" src="/static/image/email.png" width="25" height="25">
+                                    </a>
+                                </li>
+                            </ul>
+                            <hr>
+                            <p> Just Do It. Easy </p>
+                        </div>
+                    </div>
+                    <div class=widget><h4 class=title>标签</h4>
+                        <div class="content">
+                            <a href="" class="btn btn-default">
+                                python
+                            </a>
+                        </div>
+                    </div>
+                    <div class=widget>
+                        <h4 class=title>分类</h4>
+                        {% for category in categories %}
+                        <a href="{{ url_for('main.category_page', category_name=category.category_name) }}" class="btn btn-default ">
+                            {{ category.category_name }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </aside>
+            </div>
+        {% endblock %}
+    </div>
+</section>
+<!-- 底栏 -->
+<footer class=main-footer>
+    <div class=container>
+        <div class=row>
+            <div class=col-sm-4>
+                <div class=widget><h4 class=title>最新文章</h4>
+                    <div class="content recent-post">
+                        {% for recent_article in recent_articles %}
+                            <div class=recent-single-post>
+                                <a href="{{ url_for('main.article', id=recent_article.id) }}" class="post-title">
+                                    {{ recent_article.title }}
+                                </a>
+                                <div class=date>{{ moment(recent_article.timestamp).format('lll') }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class=col-sm-4>
+                <div class=widget><h4 class=title>标签云</h4>
+                    <div class="content tag-cloud">
+                        <a href="#">...</a>
+                    </div>
+                </div>
+            </div>
+            <div class=col-sm-4>
+                <div class=widget><h4 class=title>友链</h4>
+                    <div class="content tag-cloud friend-links">
+                        <a href="http://www.bootcss.com" title="Bootstrap 中文网"
+                           onclick="_hmt.push(['_trackEvent', 'link', 'click', 'bootcsscom'])" target=_blank>
+                            Bootstrap中文网
+                        </a>
+                        <a href="https://www.webpackjs.com" title="Webpack 中文网"
+                           onclick="_hmt.push(['_trackEvent', 'link', 'click', 'webpackjscom'])" target=_blank>
+                            Webpack中文网
+                        </a>
+                        <a href="https://www.nodeapp.cn" title="Node.js 中文文档"
+                           onclick="_hmt.push(['_trackEvent', 'link', 'click', 'nodeappcn'])" target=_blank>
+                            Node.js中文文档
+                        </a>
+                        <a href="https://www.npmjs.com.cn/" title="NPM 中文网"
+                           onclick="_hmt.push(['_trackEvent', 'link', 'click', 'npmjscomcn'])" target=_blank>
+                            NPM中文网
+                        </a>
+                        <a href="http://www.sasschina.com/" title="SASS 中文网"
+                           onclick="_hmt.push(['_trackEvent','link', 'click', 'sasschinacom'])" target=_blank>
+                            SASS中文网
+                        </a>
+                        <a href="https://www.jquery123.com/" title="jQuery 中文文档"
+                           onclick="_hmt.push(['_trackEvent','link', 'click', 'jquery123com'])"
+                           target=_blank>
+                            jQuery中文文档
+                        </a>
+                        <a href="https://www.parceljs.cn/" title="Parcel 中文文档"
+                           onclick="_hmt.push(['_trackEvent','link', 'click', 'parcel'])" target=_blank>
+                            Parcel中文文档
+                        </a>
+                        <a href="http://www.rollupjs.com/" title="Rollup 中文文档"
+                           onclick="_hmt.push(['_trackEvent','link', 'click', 'rollup'])" target=_blank>
+                            Rollup中文文档
+                        </a>
+                        <hr>
+                        <a href="https://www.golaravel.com/" title=
+                            target=_blank>
+                            网站前端参考
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12"><span>Copyright &copy; <a href='#'>clarence</a></span> |
+            </div>
+        </div>
+    </div>
+</div>
+<a href=# id=back-to-top><i class="fa fa-angle-up"></i></a>
+<script src="https://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
+<script src=https://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js></script>
+<script src=https://cdn.bootcss.com/fitvids/1.1.0/jquery.fitvids.min.js></script>
+<script src=https://cdn.bootcss.com/highlight.js/9.0.0/highlight.min.js></script>
+<script src="{{ url_for('static', filename='js/main.min.js') }}"></script>
+<script>
+    {{ moment.include_jquery() }}
+    {{ moment.include_moment() }}
+    {{ moment.lang('zh-CN') }}
+</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>
