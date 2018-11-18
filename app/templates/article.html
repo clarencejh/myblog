@@ -40,22 +40,45 @@
         {#                没有了#}
         {#            </a>#}
         {#        {% endif %}#}
-{#        <a href="#" class="btn btn-default">下一篇</a>#}
+        {#        <a href="#" class="btn btn-default">下一篇</a>#}
     </div>
     <div class="post">
-    <h3>评论</h3>
-        <form action="#" method="post">
+        <h4>评论: </h4>
+        <p></p>
+        <div class="list-group clearfix">
+            {% for commit in commits %}
+                <div class="list-group-item">
+                    <ul class="list-inline">
+                        <li class="profile-thumbnail">
+                            <img class="img-rounded profile-thumbnail" src="{{ commit.gravatar(size=40) }}" alt="">
+                        </li>
+                        <li class="post-date pull-right">{{ moment(commit.timestamp).format('lll') }}</li>
+                        <li class="post-author">
+                            <p>{{ commit.name }}</p>
+                        </li>
+                    </ul>
+                    <div class="post-content">
+                        {{ commit.body | safe }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <hr>
+
+        <form action="{{ url_for('main.article', id=post.id) }}" method="post">
+            {{ form.hidden_tag() }}
             <div class="form-group " style="width: 30%">
-                <p>username: </p>
-                <input type="text" class="form-control">
+                {{ form.name.label }}
+                {{ form.name(class_='form-control') }}
             </div>
             <div class="form-group" style="width: 30%">
-                <p>email </p>
-                <input type="text" class="form-control">
+                {{ form.email.label }}
+                {{ form.email(class_='form-control') }}
             </div>
             <div class="form-group">
-                <p> 内容</p>
-                <textarea type="text" class="form-control"></textarea>
+                {{ form.body.label }}
+                {{ form.body(class_='form-control') }}
             </div>
             <input type="submit" value="submit" class="btn btn-default">
         </form>

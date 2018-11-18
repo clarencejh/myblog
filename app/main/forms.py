@@ -6,9 +6,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField,  BooleanField,  PasswordField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, Length, Email, Regexp, ValidationError, EqualTo
 
-from app.libs import db
-from app.models import User, Category
-
+from app.models import User
 
 
 # 登录表单
@@ -42,7 +40,7 @@ class RegistrationForm(FlaskForm):
 class CommitForm(FlaskForm):
     name = StringField('*用户名:', validators=[DataRequired()])
     email = StringField('*邮箱:', validators=[DataRequired(), Email()])
-    body = TextAreaField("*评论: ( 支持 MarkDown 格式)", validators=[DataRequired()])
+    body = TextAreaField("*评论: ", validators=[DataRequired()])
     submit = SubmitField('提交')
 
 

@@ -122,7 +122,7 @@
                     <div class=widget>
                         <h4 class=title>分类</h4>
                         {% for category in categories %}
-                        <a href="{{ url_for('main.category_page', category_name=category.category_name) }}" class="btn btn-default ">
+                        <a style="margin: 3px" href="{{ url_for('main.category_page', category_name=category.category_name) }}" class="btn btn-default ">
                             {{ category.category_name }}
                         </a>
                         {% endfor %}

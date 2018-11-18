@@ -71,11 +71,26 @@ def edit_article(id):
     return render_template('edit_article.html', form=form, post=post)
 
 
-@main.route('/article/<int:id>')
+@main.route('/article/<int:id>', methods=['GET', 'POST'])
 def article(id):
+    form = CommitForm()
     post = Post.query.get_or_404(id)
-    post.add_reads()
-    return render_template('article.html', post=post)
+    if request.method == 'GET':
+        post.add_reads()
+        commits = post.commits.order_by().limit(current_app.config['COMMIT_SHOW_LIMIT']).all()
+        return render_template('article.html', post=post, commits=commits, form=form)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            with db.auto_commit():
+                commit = Commit()
+                commit.name = form.name.data
+                commit.email = form.email.data
+                commit.body = form.body.data
+                commit.post = post
+                db.session.add(commit)
+            flash('评论成功')
+            return redirect(url_for('main.article', id=id))
+        return redirect(url_for('main.article', id=id))
 
 
 @main.route('/article_zan/<int:id>')
