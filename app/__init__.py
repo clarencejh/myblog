@@ -1,7 +1,11 @@
 from flask import Flask
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
-import config_dev as config
+try:
+    import config_dev as config
+except ImportError:
+    import config
+
 from flask_moment import Moment
 from flask_admin import Admin
 from flaskext.markdown import Markdown

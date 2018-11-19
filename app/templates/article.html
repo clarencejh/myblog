@@ -23,8 +23,10 @@
         </div>
         <footer class="post-footer clearfix"></footer>
         <div>
+        {% if post.link  %}
             <a href="{{ post.link }}" class="btn btn-default" target="_blank">原文地址</a>
-            {% if current_user.is_authenticated %}
+        {% endif %}
+            {% if current_user.is_administrator %}
                 <a href="{{ url_for('main.edit_article', id=post.id) }}" class="btn btn-default pull-right">修改文章</a>
             {% endif %}
         </div>
