@@ -217,14 +217,8 @@ class Post(db.Model):
 
     def add_zans(self):
         with db.auto_commit():
-            if self.zans < 9999:
-                self.zans += 1
-                if self.reads >= 1:
-                    self.reads -= 1
-                db.session.add(self)
-                return True
-            else:
-                return False
+            self.zans += 1
+            db.session.add(self)
 
     def __repr__(self):
         return "<Post %s>" % self.title

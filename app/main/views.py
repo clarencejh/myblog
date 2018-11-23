@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
-from flask import render_template, url_for, redirect, flash, abort, request, current_app
+from flask import render_template, url_for, redirect, flash, abort, request, current_app, session
 from flask_login import login_user, current_user, login_required, logout_user
 from app.models import User, Post, Commit, Category
 from app.libs import db
@@ -68,6 +68,7 @@ def edit_article(id):
     form.title.data = post.title
     form.body.data = post.body
     form.link.data = post.link
+    form.category.data = post.category_id
     return render_template('edit_article.html', form=form, post=post)
 
 
@@ -76,9 +77,15 @@ def article(id):
     form = CommitForm()
     post = Post.query.get_or_404(id)
     if request.method == 'GET':
-        post.add_reads()
+        # 阅读数增加限制
+        if not session.get('article_id_reads'):
+            session['article_id_reads'] = []
+        if id not in session.get('article_id_reads'):
+            post.add_reads()
+            session.get('article_id_reads').append(id)
         commits = post.commits.order_by().limit(current_app.config['COMMIT_SHOW_LIMIT']).all()
         return render_template('article.html', post=post, commits=commits, form=form)
+
     if request.method == 'POST':
         if form.validate_on_submit():
             with db.auto_commit():
@@ -96,9 +103,16 @@ def article(id):
 @main.route('/article_zan/<int:id>')
 def article_zans(id):
     post = Post.query.get_or_404(id)
-    if post.add_zans():
-        return redirect(url_for('main.article', id=id))
-    flash('点赞已经到达最大数量')
+    # 点赞限制
+    if not session.get('article_id_zans'):
+        session['article_id_zans'] = []
+    if id not in session.get('article_id_zans'):
+        post.add_zans()
+        session.get('article_id_zans').append(id)
+        flash('感谢你的点赞')
+    else:
+        flash('你已经点过赞了')
+
     return redirect(url_for('main.article', id=id))
 
 
