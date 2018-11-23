@@ -7,7 +7,8 @@ from app.models import User, Post, Commit, Category
 from app.libs import db
 from app.decorators import admin_required, permission_required
 from app.main import main
-from app.main.forms import LoginForm, PostForm, CommitForm, RegistrationForm
+from app.main.forms import LoginForm, PostForm, CommitForm, RegistrationForm, SearchForm
+from sqlalchemy import and_, or_
 
 
 @main.route('/')
@@ -18,6 +19,37 @@ def index():
     )
     posts = pagination.items
     return render_template('index.html', posts=posts, pagination=pagination, current_time=datetime.utcnow())
+
+
+# 表单验证, 然后重定向搜索
+@main.route('/search-red/', methods=['POST'])
+def search_red():
+    form = SearchForm()
+    if form.validate_on_submit():
+        kw = form.content.data
+        return redirect(url_for('main.search', kw=kw))
+    return redirect(url_for('main.index'))
+
+
+@main.route('/search/')
+def search():
+    page = request.args.get('page', 1, type=int)
+    keyword = request.args.get('kw', 'python')
+    pagination = Post.query.filter(
+        or_(Post.title.like("%" + keyword + "%"),
+            Post.body.like("%" + keyword + "%"),
+            )).paginate(
+        page, per_page=10, error_out=False)
+    posts = pagination.items
+    return render_template('search.html', pagination=pagination, posts=posts)
+
+    #
+    # pagination = Post.query.filter(
+    #     or_(Post.title.like("%" + form.content.data + "%")
+    #         )).paginate(
+    #     page, per_page=10, error_out=False)
+    # posts = pagination.items
+    # return render_template('search.html', searchform=form, pagination=pagination, posts=posts)
 
 
 def get_category():

@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 {% import '_macros.html' as macros %}
 
+{% block title %}
+    {{ super() }}
+    - 分类
+{% endblock %}
+
+
 {% block main %}
     <div class="post">
             <h3>{{ category_name }}</h3>

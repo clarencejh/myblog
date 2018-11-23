@@ -50,3 +50,8 @@ class PostForm(FlaskForm):
     category = SelectField('类别', default=1, coerce=int)
     body = TextAreaField('内容', validators=[DataRequired()])
     link = StringField('链接')
+
+
+class SearchForm(FlaskForm):
+    content = StringField(validators=[DataRequired(), Length(0, 64)])
+    submit = SubmitField('搜索')

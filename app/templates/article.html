@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 {% import '_macros.html' as macros %}
 
+{% block title %}
+    {{ super() }}
+    - 详情页面
+{% endblock %}
+
+
 {% block main %}
     <article class="post">
         <header class="post-head"><h2>{{ post.title }}</h2>
