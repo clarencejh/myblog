@@ -11,15 +11,17 @@ from app.models import Message
 def index():
     form = MsgForm()
     page = request.args.get('page', 1, type=int)
-    if form.validate():
+    validate = form.validate()
+    if validate:
         with db.auto_commit():
             msg = Message()
             msg.name = form.name.data
             msg.body = form.body.data
             db.session.add(msg)
-            print('提交成功')
         flash('发表成功')
         return redirect(url_for('msg.index'))
+    if request.method == "POST" and not validate:
+        flash('字符太长')
 
     pagination = Message.query.order_by(Message.timestamp.desc()).paginate(
         page, per_page=current_app.config['MESSAGES_SHOW_PER_PAGE'], error_out=False)
